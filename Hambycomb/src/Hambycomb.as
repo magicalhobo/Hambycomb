@@ -149,6 +149,8 @@ package
 		
 		public function read(bytes:ByteArray):ByteArray
 		{
+			return bytes;
+			
 			var swf:SWF = new SWF(bytes);
 			
 			bytes.position = 0;
