@@ -26,10 +26,11 @@ package
 	
 	public class Hambycomb extends Sprite
 	{
-		private static const TESTING:Boolean = true;
+		private static const TESTING:Boolean = false;
 		
 		private var currentInjection:Loader;
 		private var loader:Loader;
+		private var overlay:Overlay;
 		private var urlLoader:URLLoader;
 		private var website:*;
 		
@@ -38,15 +39,16 @@ package
 			stage.align = StageAlign.TOP_LEFT;
 			stage.scaleMode = StageScaleMode.NO_SCALE;
 			
-			var fullScreenMenuItem:ContextMenuItem = new ContextMenuItem('Enter Fullscreen');
 			var hambycombMenuItem:ContextMenuItem = new ContextMenuItem('About Hambycomb...', true);
 			
-			fullScreenMenuItem.addEventListener(ContextMenuEvent.MENU_ITEM_SELECT, fullScreenMenuItemSelectHandler);
 			hambycombMenuItem.addEventListener(ContextMenuEvent.MENU_ITEM_SELECT, hambycombMenuItemSelectHandler);
 			
 			contextMenu = new ContextMenu();
-			contextMenu.customItems = [fullScreenMenuItem, hambycombMenuItem];
+			contextMenu.customItems = [hambycombMenuItem];
 			
+			overlay = new Overlay();
+			stage.addChild(overlay);
+
 			loadMain();
 		}
 		
@@ -55,11 +57,18 @@ package
 			loadInjection();
 		}
 		
-		private function fullScreenMenuItemSelectHandler(event:ContextMenuEvent):void
+		private function fullscreenClickHandler(ev:MouseEvent):void
 		{
-			stage.displayState = StageDisplayState.FULL_SCREEN_INTERACTIVE;
+			if(stage.displayState == StageDisplayState.FULL_SCREEN_INTERACTIVE)
+			{
+				stage.displayState = StageDisplayState.NORMAL;
+			}
+			else
+			{
+				stage.displayState = StageDisplayState.FULL_SCREEN_INTERACTIVE;
+			}
 		}
-		
+
 		private function hambycombMenuItemSelectHandler(event:ContextMenuEvent):void
 		{
 			navigateToURL(new URLRequest('https://github.com/magicalhobo/Hambycomb'), '_blank');
@@ -89,29 +98,28 @@ package
 			var Website:Class = getDefinitionByName('iilwy.versions.website.Website') as Class;
 			website = new Website() as Sprite;
 			
-			stage.addChild(website);
+			var reloadButton:Sprite = new Sprite();
+			reloadButton.graphics.beginFill(0x00FF00);
+			reloadButton.graphics.drawCircle(5, 5, 5);
+			reloadButton.graphics.endFill();
+			reloadButton.y = 40;
 			
 			if(TESTING)
 			{
-				var reloadButton:Sprite = new Sprite();
-				reloadButton.graphics.beginFill(0x00FF00);
-				reloadButton.graphics.drawCircle(5, 5, 5);
-				reloadButton.graphics.endFill();
-				reloadButton.y = 40;
-				
 				reloadButton.addEventListener(MouseEvent.CLICK, buttonClickHandler);
-				
-				stage.addChild(reloadButton);
 			}
 			else
 			{
-				var overlay:Overlay = new Overlay();
-				stage.addChild(overlay);
+				reloadButton.addEventListener(MouseEvent.CLICK, fullscreenClickHandler);
 			}
+				
+			stage.addChild(website);
+			stage.addChild(reloadButton);
+			stage.setChildIndex(overlay, stage.numChildren - 1);
 			
 			loadInjection();
 		}
-
+		
 		public function loadInjection():void
 		{
 			try
@@ -281,7 +289,7 @@ class Overlay extends Sprite
 	{
 		buttonMode = true;
 		
-		var textFormat1:TextFormat = new TextFormat('Arial', 12, 0xFFFFFF, false, true);
+		var textFormat1:TextFormat = new TextFormat('Arial', 10, 0xFFFFFF, false, true);
 		var textFormat2:TextFormat = new TextFormat('Arial', 20, 0xFFFFFF);
 		
 		content = new Sprite();
