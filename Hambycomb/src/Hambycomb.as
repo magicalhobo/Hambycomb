@@ -39,25 +39,15 @@ package
 			stage.scaleMode = StageScaleMode.NO_SCALE;
 			
 			var fullScreenMenuItem:ContextMenuItem = new ContextMenuItem('Enter Fullscreen');
-			var hambycombMenuItem:ContextMenuItem = new ContextMenuItem('Hambycomb version 2.0');
+			var hambycombMenuItem:ContextMenuItem = new ContextMenuItem('About Hambycomb...', true);
 			
 			fullScreenMenuItem.addEventListener(ContextMenuEvent.MENU_ITEM_SELECT, fullScreenMenuItemSelectHandler);
 			hambycombMenuItem.addEventListener(ContextMenuEvent.MENU_ITEM_SELECT, hambycombMenuItemSelectHandler);
 			
 			contextMenu = new ContextMenu();
-			contextMenu.customItems = [hambycombMenuItem, fullScreenMenuItem];
+			contextMenu.customItems = [fullScreenMenuItem, hambycombMenuItem];
 			
 			loadMain();
-		}
-		
-		protected function fullScreenMenuItemSelectHandler(event:ContextMenuEvent):void
-		{
-			stage.displayState = StageDisplayState.FULL_SCREEN;
-		}
-		
-		protected function hambycombMenuItemSelectHandler(event:ContextMenuEvent):void
-		{
-			navigateToURL(new URLRequest('https://github.com/magicalhobo/Hambycomb'), '_blank');
 		}
 		
 		private function buttonClickHandler(ev:MouseEvent):void
@@ -65,15 +55,26 @@ package
 			loadInjection();
 		}
 		
+		private function fullScreenMenuItemSelectHandler(event:ContextMenuEvent):void
+		{
+			stage.displayState = StageDisplayState.FULL_SCREEN_INTERACTIVE;
+		}
+		
+		private function hambycombMenuItemSelectHandler(event:ContextMenuEvent):void
+		{
+			navigateToURL(new URLRequest('https://github.com/magicalhobo/Hambycomb'), '_blank');
+		}
+
 		private function injectionInitHandler(ev:Event):void
 		{
-			trace(currentInjection.contentLoaderInfo.bytesTotal);
 			var injection:* = currentInjection.content;
 			injection.activate(website, loader.contentLoaderInfo.applicationDomain);
 		}
 
 		private function mainLoaderCompleteHandler(ev:Event):void
 		{
+			trace('Main swf loaded');
+			
 			var bytes:ByteArray = read(urlLoader.data as ByteArray);
 			
 			loader = new Loader();
@@ -83,6 +84,8 @@ package
 		
 		private function mainLoaderInitHandler(ev:Event):void
 		{
+			trace('Main swf initialized');
+			
 			var Website:Class = getDefinitionByName('iilwy.versions.website.Website') as Class;
 			website = new Website() as Sprite;
 			
@@ -99,6 +102,11 @@ package
 				reloadButton.addEventListener(MouseEvent.CLICK, buttonClickHandler);
 				
 				stage.addChild(reloadButton);
+			}
+			else
+			{
+				var overlay:Overlay = new Overlay();
+				stage.addChild(overlay);
 			}
 			
 			loadInjection();
@@ -149,8 +157,6 @@ package
 		
 		public function read(bytes:ByteArray):ByteArray
 		{
-			return bytes;
-			
 			var swf:SWF = new SWF(bytes);
 			
 			bytes.position = 0;
@@ -245,8 +251,109 @@ package
 	}
 }
 
+import flash.display.Bitmap;
+import flash.display.Sprite;
+import flash.events.Event;
+import flash.events.MouseEvent;
+import flash.net.URLRequest;
+import flash.net.navigateToURL;
+import flash.text.TextField;
+import flash.text.TextFieldAutoSize;
+import flash.text.TextFormat;
+
 class Embedded
 {
 	[Embed(source="../bin-debug/HambycombInjection.swf", mimeType="application/octet-stream")]
 	public static const INJECTION:Class;
+
+	[Embed(source="/sketchport.png")]
+	public static const SKETCHPORT_LOGO:Class;
+}
+
+class Overlay extends Sprite
+{
+	private var broughtToYouBy:TextField;
+	private var content:Sprite;
+	private var sketchportLogo:Bitmap;
+	private var tagline:TextField;
+
+	public function Overlay()
+	{
+		buttonMode = true;
+		
+		var textFormat1:TextFormat = new TextFormat('Arial', 12, 0xFFFFFF, false, true);
+		var textFormat2:TextFormat = new TextFormat('Arial', 20, 0xFFFFFF);
+		
+		content = new Sprite();
+		
+		broughtToYouBy = new TextField();
+		broughtToYouBy.autoSize = TextFieldAutoSize.LEFT;
+		broughtToYouBy.defaultTextFormat = textFormat1;
+		broughtToYouBy.mouseEnabled = false;
+		broughtToYouBy.text = 'HAMBYCOMB IS BROUGHT TO YOU BY';
+		
+		sketchportLogo = new Embedded.SKETCHPORT_LOGO();
+		
+		tagline = new TextField();
+		tagline.autoSize = TextFieldAutoSize.LEFT;
+		tagline.defaultTextFormat = textFormat2;
+		tagline.mouseEnabled = false;
+		tagline.text = 'A free social drawing application for iOS, Android, Mac and PC';
+		
+		content.addChild(broughtToYouBy);
+		content.addChild(sketchportLogo);
+		content.addChild(tagline);
+		
+		broughtToYouBy.x = (content.width - broughtToYouBy.width) / 2;
+		broughtToYouBy.y = 0;
+		sketchportLogo.x = (content.width - sketchportLogo.width) / 2;
+		sketchportLogo.y = broughtToYouBy.height + 10;
+		tagline.x = (content.width - tagline.width) / 2;
+		tagline.y = broughtToYouBy.height + sketchportLogo.height + 20;
+		
+		addChild(content);
+		
+		addEventListener(Event.ADDED_TO_STAGE, addedToStageHandler);
+		addEventListener(Event.REMOVED_FROM_STAGE, removedFromStageHandler);
+		addEventListener(MouseEvent.CLICK, clickHandler);
+		
+		content.addEventListener(MouseEvent.CLICK, logoClickHandler);
+	}
+	
+	protected function resize():void
+	{
+		graphics.clear();
+		graphics.beginFill(0x000000, 0.90);
+		graphics.drawRect(0, 0, stage.stageWidth, stage.stageHeight);
+		graphics.endFill();
+		
+		content.x = (stage.stageWidth - content.width) / 2;
+		content.y = (stage.stageHeight - content.height) / 2;
+	}
+	
+	private function addedToStageHandler(ev:Event):void
+	{
+		stage.addEventListener(Event.RESIZE, resizeHandler);
+		resize();
+	}
+	
+	private function clickHandler(ev:Event):void
+	{
+		stage.removeChild(this);
+	}
+	
+	private function logoClickHandler(ev:Event):void
+	{
+		navigateToURL(new URLRequest('http://www.sketchport.com/browse'), '_blank');
+	}
+	
+	private function removedFromStageHandler(ev:Event):void
+	{
+		stage.removeEventListener(Event.RESIZE, resizeHandler);
+	}
+	
+	private function resizeHandler(ev:Event):void
+	{
+		resize();
+	}
 }
