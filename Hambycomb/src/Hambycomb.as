@@ -10,6 +10,7 @@ package
 	import flash.events.ContextMenuEvent;
 	import flash.events.Event;
 	import flash.events.MouseEvent;
+	import flash.external.ExternalInterface;
 	import flash.net.URLLoader;
 	import flash.net.URLLoaderDataFormat;
 	import flash.net.URLRequest;
@@ -30,7 +31,6 @@ package
 		
 		private var currentInjection:Loader;
 		private var loader:Loader;
-		private var overlay:Overlay;
 		private var urlLoader:URLLoader;
 		private var website:*;
 		
@@ -46,9 +46,6 @@ package
 			contextMenu = new ContextMenu();
 			contextMenu.customItems = [hambycombMenuItem];
 			
-			overlay = new Overlay();
-			stage.addChild(overlay);
-
 			loadMain();
 		}
 		
@@ -115,7 +112,6 @@ package
 				
 			stage.addChild(website);
 			stage.addChild(reloadButton);
-			stage.setChildIndex(overlay, stage.numChildren - 1);
 			
 			loadInjection();
 		}
@@ -151,6 +147,15 @@ package
 			{
 				var injectionBytes:ByteArray = new Embedded.INJECTION() as ByteArray;
 				currentInjection.loadBytes(injectionBytes, context);
+			}
+			
+			try
+			{
+				ExternalInterface.call('hambycombReady');
+			}
+			catch(e:*)
+			{
+				trace('Unable to call ExternalInterface');
 			}
 		}
 		
@@ -273,95 +278,4 @@ class Embedded
 {
 	[Embed(source="../bin-debug/HambycombInjection.swf", mimeType="application/octet-stream")]
 	public static const INJECTION:Class;
-
-	[Embed(source="/sketchport.png")]
-	public static const SKETCHPORT_LOGO:Class;
-}
-
-class Overlay extends Sprite
-{
-	private var broughtToYouBy:TextField;
-	private var content:Sprite;
-	private var sketchportLogo:Bitmap;
-	private var tagline:TextField;
-
-	public function Overlay()
-	{
-		buttonMode = true;
-		
-		var textFormat1:TextFormat = new TextFormat('Arial', 10, 0xFFFFFF, false, true);
-		var textFormat2:TextFormat = new TextFormat('Arial', 20, 0xFFFFFF);
-		
-		content = new Sprite();
-		
-		broughtToYouBy = new TextField();
-		broughtToYouBy.autoSize = TextFieldAutoSize.LEFT;
-		broughtToYouBy.defaultTextFormat = textFormat1;
-		broughtToYouBy.mouseEnabled = false;
-		broughtToYouBy.text = 'HAMBYCOMB IS BROUGHT TO YOU BY';
-		
-		sketchportLogo = new Embedded.SKETCHPORT_LOGO();
-		
-		tagline = new TextField();
-		tagline.autoSize = TextFieldAutoSize.LEFT;
-		tagline.defaultTextFormat = textFormat2;
-		tagline.mouseEnabled = false;
-		tagline.text = 'A free social drawing application for iOS, Android, Mac and PC';
-		
-		content.addChild(broughtToYouBy);
-		content.addChild(sketchportLogo);
-		content.addChild(tagline);
-		
-		broughtToYouBy.x = (content.width - broughtToYouBy.width) / 2;
-		broughtToYouBy.y = 0;
-		sketchportLogo.x = (content.width - sketchportLogo.width) / 2;
-		sketchportLogo.y = broughtToYouBy.height + 10;
-		tagline.x = (content.width - tagline.width) / 2;
-		tagline.y = broughtToYouBy.height + sketchportLogo.height + 20;
-		
-		addChild(content);
-		
-		addEventListener(Event.ADDED_TO_STAGE, addedToStageHandler);
-		addEventListener(Event.REMOVED_FROM_STAGE, removedFromStageHandler);
-		addEventListener(MouseEvent.CLICK, clickHandler);
-		
-		content.addEventListener(MouseEvent.CLICK, logoClickHandler);
-	}
-	
-	protected function resize():void
-	{
-		graphics.clear();
-		graphics.beginFill(0x000000, 0.90);
-		graphics.drawRect(0, 0, stage.stageWidth, stage.stageHeight);
-		graphics.endFill();
-		
-		content.x = (stage.stageWidth - content.width) / 2;
-		content.y = (stage.stageHeight - content.height) / 2;
-	}
-	
-	private function addedToStageHandler(ev:Event):void
-	{
-		stage.addEventListener(Event.RESIZE, resizeHandler);
-		resize();
-	}
-	
-	private function clickHandler(ev:Event):void
-	{
-		stage.removeChild(this);
-	}
-	
-	private function logoClickHandler(ev:Event):void
-	{
-		navigateToURL(new URLRequest('http://www.sketchport.com/browse'), '_blank');
-	}
-	
-	private function removedFromStageHandler(ev:Event):void
-	{
-		stage.removeEventListener(Event.RESIZE, resizeHandler);
-	}
-	
-	private function resizeHandler(ev:Event):void
-	{
-		resize();
-	}
 }
