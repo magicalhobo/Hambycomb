@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Hambycomb - OMGPOP &copy; with super powers</title>
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+		<meta name="description" content="OMGPOP &copy; with super powers"/>
+		<style type="text/css" media="screen">
+@-webkit-keyframes pulse
+{
+	0%
+	{
+		-webkit-transform: scale(1);
+		transform: scale(1);
+	}
+
+	50%
+	{
+		-webkit-transform: scale(1.1);
+		transform: scale(1.1);
+	}
+
+	100%
+	{
+		-webkit-transform: scale(1);
+		transform: scale(1);
+	}
+}
+
+@keyframes pulse
+{
+	0%
+	{
+		-webkit-transform: scale(1);
+		-ms-transform: scale(1);
+		transform: scale(1);
+	}
+
+	50%
+	{
+		-webkit-transform: scale(1.1);
+		-ms-transform: scale(1.1);
+		transform: scale(1.1);
+	}
+
+	100%
+	{
+		-webkit-transform: scale(1);
+		-ms-transform: scale(1);
+		transform: scale(1);
+	}
+}
+
+html
+{
+	font-family: sans-serif;
+	height: 100%;
+}
+
+body
+{
+	height: 100%;
+	margin: 0;
+	padding: 0;
+	overflow: auto;
+}
+
+h1
+{
+	font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+	font-size: 35px;
+	font-weight: normal;
+	margin-bottom: 10px;
+	margin-top: 0;
+}
+
+.loading #content
+{
+	height: 1px;
+	overflow: hidden;
+	width: 1px;
+}
+
+.loaded #splash
+{
+	display: none;
+}
+
+.logo
+{
+	height: 50%;
+	position: relative;
+	width: 50%;
+}
+
+.logo img
+{
+	bottom: -98px;
+	position: absolute;
+	right: -135px;
+}
+
+.pulse
+{
+	animation-duration: 1s;
+	animation-iteration-count: 50;
+	animation-fill-mode: both;
+	animation-name: pulse;
+	-webkit-animation-duration: 1s;
+	-webkit-animation-fill-mode: both;
+	-webkit-animation-iteration-count: 50;
+	-webkit-animation-name: pulse;
+}
+
+#content
+{
+	height: 100%;
+	width: 100%;
+}
+
+#footer
+{
+	background: #333;
+	color: #eee;
+	padding: 20px;
+}
+
+#footer a
+{
+	color: #fff;
+	font-weight: bold;
+	text-decoration: none;
+}
+
+#splash
+{
+	background: #dadada;
+	height: 100%;
+	width: 100%;
+}
+
+#sponsor
+{
+	font-style: italic;
+	text-align: right;
+	width: 100%;
+}
+
+		</style>
+		<script type="text/javascript" src="/js/swfobject.js"></script>
+		<script type="text/javascript">
+var swfVersionStr = "10.2.0";
+var xiSwfUrlStr = "playerProductInstall.swf";
+var flashvars = {};
+var params = {};
+params.quality = "high";
+params.bgcolor = "#ffffff";
+params.allowscriptaccess = "sameDomain";
+params.allowfullscreeninteractive = "true";
+params.menu = "false";
+var attributes = {};
+attributes.id = "hambycomb";
+attributes.name = "hambycomb";
+attributes.align = "middle";
+
+function hambycombReady()
+{
+	document.body.className = 'loaded';
+}
+
+swfobject.embedSWF('hambycomb.4.swf', 'swf', '100%', '100%', swfVersionStr, xiSwfUrlStr, flashvars, params, attributes);
+		</script>
+	</head>
+	<body class="loading">
+		<div id="splash">
+			<div class="logo">
+				<img src="/images/logo-stroked-270x196.png" class="pulse">
+			</div>
+		</div>
+		<div id="content">
+			<div id="swf"></div>
+		</div>
+		<div id="footer">
+			<table style="margin: 0 auto; max-width: 1200px">
+				<tr>
+					<td style="white-space: nowrap">
+						<h1 style="margin: 0">HAMBYCOMB</h1>
+						<p style="color: #666; margin: 0">OMGPOP &copy; with <a href="https://github.com/magicalhobo/Hambycomb" target="_blank" title="Hambycomb is open source">super powers</a></p>
+					</td>
+					<td id="sponsor">
+						Hambycomb is brought to you by <a href="http://www.sketchport.com" target="_blank">SketchPort</a>, a modern digital drawing environment.
+					</td>
+					<td>
+						<a href="http://www.sketchport.com/browse" target="_blank" title="SketchPort">
+							<img src="/images/flat-circle-logo-128x128.png" style="margin: 20px" alt="SketchPort logo">
+						</a>
+					</td>
+				</tr>
+			</table>
+		</div>
+		<script type="text/javascript">
+var _gaq = _gaq || [];
+_gaq.push(['_setAccount', 'UA-42267496-1']);
+_gaq.push(['_trackPageview']);
+
+(function() {
+var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+})();
+		</script>
+   </body>
+</html>
