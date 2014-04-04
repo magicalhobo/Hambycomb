@@ -2,7 +2,7 @@
 
 [Hambycomb](http://www.hambycomb.com/) is an ActionScript 3 project that allows runtime modifictaion of the game Draw My Thing on [OMGPOP](http://www.omgpop.com/).
 
-It is the precursor to both [SWFWire](http://www.swfwire.com/) and [SketchPort](http://www.sketchport.com/).
+It is the inspiration for both [SWFWire](http://www.swfwire.com/) and [SketchPort](http://www.sketchport.com/).
 
 The idea is simple.  We load the OMGPOP SWF and a custom SWF into the same `ApplicationDomain`, and the custom SWF can modify the OMGPOP SWF at runtime.
 
