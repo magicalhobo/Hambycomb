@@ -1,4 +1,4 @@
-#Hambycomb
+# Hambycomb
 
 [Hambycomb](http://www.hambycomb.com/) is an ActionScript 3 project that allows runtime modifictaion of the game Draw My Thing on [OMGPOP](http://www.omgpop.com/).
 
@@ -8,7 +8,7 @@ The idea is simple.  We load the OMGPOP SWF and a custom SWF into the same `Appl
 
 This gives us two parts:
 
-##The container
+## The container
 *A.K.A. Hambycomb.as / Hambycomb.swf*
 
 The container loads OMGPOP and the injection. Depending on the `TESTING` flag, it will either:
@@ -16,7 +16,7 @@ The container loads OMGPOP and the injection. Depending on the `TESTING` flag, i
 - Embed the injection for quick loading.
 - Load it dynamically for easy testing.  A *green dot* appears in the top left, which you can click to reload the hack.
 
-##The injection
+## The injection
 *A.K.A. HambycombInjection.as / HambycombInjection.swf*
 
 The injection contains the code that interacts with the OMGPOP SWF.  You can modify it during game play to quickly figure out your hack.  In this case, it adds keyboard shortcuts that can modify the brush while drawing.
